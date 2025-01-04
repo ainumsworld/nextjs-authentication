@@ -1,9 +1,9 @@
+import { type Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+
 import "@/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
-
-import { TRPCReactProvider } from "@/trpc/react";
+import { AppProvider } from "@/providers/app";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -15,9 +15,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${GeistSans.variable}`}
+    >
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
