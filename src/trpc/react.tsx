@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
 import SuperJSON from "superjson";
 
-import { type AppRouter } from "@/server/api/root";
+import { type AppRouter } from "@/server/trpc/router";
+
 import { createQueryClient } from "./query-client";
+
+export const api = createTRPCReact<AppRouter>();
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -19,22 +22,6 @@ const getQueryClient = () => {
   // Browser: use singleton pattern to keep the same query client
   return (clientQueryClientSingleton ??= createQueryClient());
 };
-
-export const api = createTRPCReact<AppRouter>();
-
-/**
- * Inference helper for inputs.
- *
- * @example type HelloInput = RouterInputs['example']['hello']
- */
-export type RouterInputs = inferRouterInputs<AppRouter>;
-
-/**
- * Inference helper for outputs.
- *
- * @example type HelloOutput = RouterOutputs['example']['hello']
- */
-export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
@@ -57,14 +44,18 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           },
         }),
       ],
-    })
+    }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
+      <api.Provider
+        client={trpcClient}
+        queryClient={queryClient}
+      >
         {props.children}
       </api.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
@@ -74,3 +65,17 @@ function getBaseUrl() {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
+
+//
+export const rootApi = api.root;
+export const userApi = api.user;
+
+export const useUtils = () => api.useUtils();
+export const useRootUtils = () => {
+  const utils = api.useUtils();
+  return utils.root;
+};
+export const useUserUtils = () => {
+  const utils = api.useUtils();
+  return utils.user;
+};

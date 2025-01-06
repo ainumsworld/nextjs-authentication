@@ -1,7 +1,8 @@
 "use client";
 
-import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from "next-themes";
+import { Toaster as ToastProvider } from "react-hot-toast";
+import { NextUIProvider } from "@nextui-org/react";
 
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -19,6 +20,7 @@ export const AppProvider = ({ children }: Props) => {
         disableTransitionOnChange
       >
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <ToastProvider />
       </ThemeProvider>
     </NextUIProvider>
   );
