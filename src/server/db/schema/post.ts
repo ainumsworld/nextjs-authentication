@@ -1,24 +1,29 @@
-import {
-  index,
-  pgTable,
-  integer,
-  varchar,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { index, pgTable, varchar } from "drizzle-orm/pg-core";
+
+import { pgPrimaryId, pgRefId, timestamps } from "@/helpers/drizzle";
+
+import { userTbl } from "./user";
 
 export const postTbl = pgTable(
   "post",
   {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
+    id: pgPrimaryId("id"),
+    title: varchar("title", { length: 256 }).notNull(),
+    userId: pgRefId("user_id")
       .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date(),
-    ),
+      .references(() => userTbl.id, { onDelete: "cascade" }),
+    ...timestamps,
   },
-  (table) => ({
-    nameIndex: index("name_idx").on(table.name),
-  }),
+  (table) => [{ titleIdx: index("title_idx").on(table.title) }],
 );
+
+export const postRelations = relations(postTbl, ({ one }) => ({
+  user: one(userTbl, {
+    fields: [postTbl.userId],
+    references: [userTbl.id],
+  }),
+}));
+
+//
+export type Post = typeof postTbl.$inferSelect;
