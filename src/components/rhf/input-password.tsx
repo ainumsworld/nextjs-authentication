@@ -7,16 +7,16 @@ import {
 import { Input, type InputProps } from "@nextui-org/input";
 
 import { SolarIcon } from "@/config/icons";
-import { useOpen } from "@/hooks/use-open";
 
 type Props<T extends FieldValues> = {
   name: FieldName<T>;
+  showPassword?: boolean;
+  handleTogglePassword?: () => void;
 } & InputProps;
 
 export const RHFPassword = <T extends FieldValues>(props: Props<T>) => {
-  const { name, ...other } = props;
+  const { name, showPassword, handleTogglePassword, ...other } = props;
   const { control } = useFormContext();
-  const { open: showPassword, handleToggle } = useOpen();
   return (
     <Controller
       name={name}
@@ -34,7 +34,7 @@ export const RHFPassword = <T extends FieldValues>(props: Props<T>) => {
               type="button"
               aria-label="toggle password visibility"
               className="focus:outline-none"
-              onClick={handleToggle}
+              onClick={handleTogglePassword}
             >
               {showPassword ? <SolarIcon.EyeClosed /> : <SolarIcon.Eye />}
             </button>
