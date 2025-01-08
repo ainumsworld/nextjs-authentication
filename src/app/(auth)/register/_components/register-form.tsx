@@ -1,14 +1,12 @@
-import NextLink from "next/link";
-import { Button, Link } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
-import { APP_ROUTES } from "@/config/routes";
 import { useOpen } from "@/hooks/use-open";
 import { RHFInput, RHFPassword, RHFProvider } from "@/components/rhf";
 
-import { useLoginForm, type FormValues } from "../hooks/use-login-form";
+import { useRegisterForm, type FormValues } from "../hooks/use-register-form";
 
-export const LoginForm = () => {
-  const { methods, onSubmit } = useLoginForm();
+export const RegisterForm = () => {
+  const { methods, onSubmit } = useRegisterForm();
   const { open: showPassword, handleToggle } = useOpen();
 
   return (
@@ -27,24 +25,19 @@ export const LoginForm = () => {
         showPassword={showPassword}
         handleTogglePassword={handleToggle}
       />
-
-      <Link
-        size="sm"
-        underline="hover"
-        color="foreground"
-        as={NextLink}
-        href={APP_ROUTES.forgotPassword}
-        className="self-end -my-2"
-      >
-        Forgot password?
-      </Link>
+      <RHFPassword<FormValues>
+        name="confirmPassword"
+        label="Confirm Password"
+        showPassword={showPassword}
+        handleTogglePassword={handleToggle}
+      />
 
       <Button
         fullWidth
         color="primary"
         type="submit"
       >
-        Login
+        Register
       </Button>
     </RHFProvider>
   );
