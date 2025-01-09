@@ -1,3 +1,7 @@
 import { createTRPCRouter } from "@/server/trpc";
 
-export const userRouter = createTRPCRouter({});
+import { authRouter } from "./auth/router";
+
+export const userRouter = createTRPCRouter({
+  auth: authRouter,
+});

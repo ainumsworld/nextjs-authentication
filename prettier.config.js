@@ -29,7 +29,6 @@ const config = {
     "^@/providers/(.*)$",
     "^@/config/(.*)$",
     "^@/helpers/(.*)$",
-    "^@/lib/(.*)$",
     "^@/hooks/(.*)$",
     "^@/utils/(.*)$",
     "^@/stores/(.*)$",
