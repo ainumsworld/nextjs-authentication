@@ -20,3 +20,9 @@ export enum UserStatus {
   Active = "ACTIVE",
   Blocked = "BLOCKED",
 }
+
+export enum OtpPurpose {
+  Login = "LOGIN",
+  Register = "REGISTER",
+  ForgotPassword = "FORGOT_PASSWORD",
+}
