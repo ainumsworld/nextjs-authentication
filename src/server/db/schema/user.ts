@@ -13,7 +13,8 @@ export const userTbl = pgTable(
   "user",
   {
     id: pgPrimaryId("id"),
-    fullName: varchar("full_name", { length: 256 }).notNull(),
+    fullname: varchar("fullname", { length: 256 }).notNull(),
+    username: varchar("username", { length: 256 }).notNull().unique(),
     email: varchar("email", { length: 256 }).notNull().unique(),
     password: varchar("password", { length: 256 }),
     avatar: varchar("avatar", { length: 256 }),
@@ -21,7 +22,7 @@ export const userTbl = pgTable(
     status: userStatusEnum("status").notNull().default(UserStatus.Active),
     ...timestamps,
   },
-  (table) => [{ emailIdx: uniqueIndex("email_idx").on(table.email) }],
+  (table) => [uniqueIndex("user_email_unique_idx").on(table.email)],
 );
 
 export const userRelations = relations(userTbl, ({ many }) => ({
@@ -30,3 +31,5 @@ export const userRelations = relations(userTbl, ({ many }) => ({
 
 //
 export type User = typeof userTbl.$inferSelect;
+export type UserInsertInput = typeof userTbl.$inferInsert;
+export type UserUpdateInput = Partial<UserInsertInput>;

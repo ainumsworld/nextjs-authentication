@@ -1,8 +1,6 @@
 import { createTRPCRouter } from "@/server/trpc";
 
-import { AuthController } from "./controller";
-
-const { login, register } = AuthController;
+import { login, register } from "./controller";
 
 export const authRouter = createTRPCRouter({
   login,

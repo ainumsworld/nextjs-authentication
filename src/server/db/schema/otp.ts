@@ -9,7 +9,7 @@ import {
 import { OtpPurpose } from "@/types/enums";
 import { enumToPgEnum, pgPrimaryId } from "@/helpers/drizzle";
 
-const otpPurposeEnum = enumToPgEnum("otp_purpose", OtpPurpose);
+export const otpPurposeEnum = enumToPgEnum("otp_purpose", OtpPurpose);
 
 export const otpTbl = pgTable(
   "otp",
@@ -23,12 +23,7 @@ export const otpTbl = pgTable(
     }).notNull(),
   },
   (table) => [
-    {
-      emailPurposeUnique: uniqueIndex("email_purpose_unique").on(
-        table.email,
-        table.purpose,
-      ),
-    },
+    uniqueIndex("otp_email_purpose_unique_idx").on(table.email, table.purpose),
   ],
 );
 

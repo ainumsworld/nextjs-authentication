@@ -15,7 +15,7 @@ export const postTbl = pgTable(
       .references(() => userTbl.id, { onDelete: "cascade" }),
     ...timestamps,
   },
-  (table) => [{ titleIdx: index("title_idx").on(table.title) }],
+  (table) => [index("post_title_idx").on(table.title)],
 );
 
 export const postRelations = relations(postTbl, ({ one }) => ({

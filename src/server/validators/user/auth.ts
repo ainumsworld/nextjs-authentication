@@ -7,7 +7,7 @@ import { ZOD_SCHEMA } from "@/helpers/zod";
 const baseRegister = object({
   email: ZOD_SCHEMA.email(),
   password: ZOD_SCHEMA.password("Password"),
-  confirmPassword: ZOD_SCHEMA.password("Confirm Password"),
+  confirmPassword: string().min(1, "Confirm password is required"),
 }).refine((data) => data.password === data.confirmPassword, {
   path: ["confirmPassword"],
   message: "Passwords are not matching",
