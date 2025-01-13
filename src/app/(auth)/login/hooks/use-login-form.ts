@@ -1,29 +1,42 @@
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z, { object, string } from "zod";
 
-const schema = object({
-  email: string().min(1, "Email is required").email("Email is invalid"),
-  password: string().min(1, "Password is required"),
-});
+import {
+  DEFAULT_LOGIN_EMAIL,
+  DEFAULT_LOGIN_PASSWORD,
+  REDIRECT_AFTER_LOGIN,
+} from "@/config";
+import { userApi } from "@/trpc/react";
+import { authValidator } from "@/server/validators/user";
 
-export type FormValues = z.infer<typeof schema>;
+const schema = authValidator.login;
+export type FormValues = authValidator.Login;
 
 const defaultValues: FormValues = {
-  email: "",
-  password: "",
+  email: DEFAULT_LOGIN_EMAIL,
+  password: DEFAULT_LOGIN_PASSWORD,
 };
 
 export const useLoginForm = () => {
+  const router = useRouter();
   const methods = useForm({
     defaultValues,
     resolver: zodResolver(schema),
   });
-  const { handleSubmit } = methods;
+  const { reset, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const mutation = userApi.auth.login.useMutation({
+    onSuccess() {
+      reset();
+      router.push(REDIRECT_AFTER_LOGIN);
+      router.refresh();
+    },
   });
 
-  return { methods, onSubmit };
+  const onSubmit = handleSubmit((formData) => {
+    mutation.mutate(formData);
+  });
+
+  return { methods, loading: mutation.isPending, onSubmit };
 };

@@ -8,7 +8,7 @@ import { RHFInput, RHFPassword, RHFProvider } from "@/components/rhf";
 import { useLoginForm, type FormValues } from "../hooks/use-login-form";
 
 export const LoginForm = () => {
-  const { methods, onSubmit } = useLoginForm();
+  const { methods, loading, onSubmit } = useLoginForm();
   const { open: showPassword, handleToggle } = useOpen();
 
   return (
@@ -43,6 +43,7 @@ export const LoginForm = () => {
         fullWidth
         color="primary"
         type="submit"
+        isLoading={loading}
       >
         Login
       </Button>
