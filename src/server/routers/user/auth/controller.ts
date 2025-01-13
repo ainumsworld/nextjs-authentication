@@ -1,6 +1,6 @@
 import { OtpPurpose, RegisterStep, SessionKey } from "@/types/enums";
 import { BCRYPT } from "@/helpers/bcrypt";
-import { TOKEN } from "@/helpers/token";
+import { REGISTRATION_TOKEN, TOKEN } from "@/helpers/token";
 import { BadRequest } from "@/helpers/trpc-error";
 import { sendResponse, switchInvalidCase } from "@/utils";
 import { otpMsg, userMsg } from "@/server/messages";
@@ -43,10 +43,12 @@ export const register = publicProcedure
 
       case RegisterStep.VerifyOTP:
         await OtpService.verifyOtp({ email, purpose, code: input.otp });
+        await REGISTRATION_TOKEN.create(email);
         return sendResponse({ message: otpMsg.verified });
 
       case RegisterStep.EnterDetails:
         const { fullname, username, password } = input;
+        await REGISTRATION_TOKEN.verify(email);
         const isUsernameExist = await UserQuery.getRecordOrNull({
           by: "username",
           username,

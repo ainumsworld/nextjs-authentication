@@ -7,6 +7,7 @@ export const enum RegisterStep {
 export const enum SessionKey {
   UserSession = "x-session",
   AdminSession = "x-admin-session",
+  RegisterSession = "x-register-session",
 }
 
 // FOR DATABASE

@@ -30,10 +30,10 @@ export const useEnterDetails = (defaultValues: FormValues) => {
     mutation.mutate(formData, {
       onSuccess() {
         onSuccess({ formValues: formData, step: RegisterStep.EnterEmail });
+        router.push(REDIRECT_AFTER_LOGIN);
+        router.refresh();
       },
     });
-    router.push(REDIRECT_AFTER_LOGIN);
-    router.refresh();
   });
 
   return { methods, loading: mutation.isPending, onSubmit };
