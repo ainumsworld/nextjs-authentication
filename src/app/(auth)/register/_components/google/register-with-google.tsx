@@ -6,16 +6,16 @@ import { Button } from "@nextui-org/button";
 import { env } from "@/env";
 import { LogosIcon } from "@/config/icons";
 
-import { useLoginWithGoogle } from "../hooks/use-login-with-google";
+import { useRegisterWithGoogle } from "../../hooks/use-register-with-google";
 
 const Content = () => {
-  const { login, loading } = useLoginWithGoogle();
+  const { register, loading } = useRegisterWithGoogle();
 
   return (
     <Button
       variant="flat"
       startContent={<LogosIcon.Google />}
-      onPress={() => login()}
+      onPress={() => register()}
       isLoading={loading}
     >
       Continue with Google
@@ -23,7 +23,7 @@ const Content = () => {
   );
 };
 
-export const LoginWithGoogle = () => {
+export const RegisterWithGoogle = () => {
   return (
     <GoogleOAuthProvider clientId={env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
       <Content />

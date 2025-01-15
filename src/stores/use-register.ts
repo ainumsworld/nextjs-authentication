@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 import { RegisterStep } from "@/types/enums";
-import type { UserApiInput } from "@/trpc/shared";
+import { authValidator } from "@/server/validators/user";
 
-type State = UserApiInput["auth"]["register"];
+type State = authValidator.Register;
 
 export const defaultValues: State = {
   step: RegisterStep.EnterEmail,

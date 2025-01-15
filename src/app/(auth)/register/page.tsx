@@ -8,7 +8,7 @@ import { Logo } from "@/components/logo";
 
 import { CardWrapper } from "../_components/card-wrapper";
 import { Form } from "./_components/form";
-import { RegisterWithGoogle } from "./_components/register-with-google";
+import { RegisterWithGoogle } from "./_components/google/register-with-google";
 
 export const metadata = APP_METADATA.register;
 
