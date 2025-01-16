@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "@/server/trpc";
 
 import {
+  forgotPassword,
   login,
   loginWithGoogle,
   register,
@@ -8,6 +9,7 @@ import {
 } from "./controller";
 
 export const authRouter = createTRPCRouter({
+  forgotPassword,
   login,
   loginWithGoogle,
   register,

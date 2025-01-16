@@ -4,7 +4,12 @@ import { UserRole } from "@/types/enums";
 import { NotFoundError } from "@/helpers/trpc-error";
 import { switchInvalidCase } from "@/utils";
 import { db } from "@/server/db";
-import { userTbl, type User, type UserInsertInput } from "@/server/db/schema";
+import {
+  userTbl,
+  type User,
+  type UserInsertInput,
+  type UserUpdateInput,
+} from "@/server/db/schema";
 import { userMsg } from "@/server/messages";
 
 type UserByArgs =
@@ -53,5 +58,10 @@ export class UserQuery {
   public static async create(input: UserInsertInput) {
     const record = await db.insert(this.table).values(input).returning();
     return record[0]!;
+  }
+
+  public static async update(id: User["id"], input: UserUpdateInput) {
+    const where = this.getWhereCondition({ by: "id", id });
+    return db.update(this.table).set(input).where(where);
   }
 }

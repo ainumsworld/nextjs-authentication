@@ -12,6 +12,7 @@ import { publicProcedure } from "@/server/trpc";
 import { authValidator } from "@/server/validators/user";
 import {
   EmailVerification,
+  ForgotPassword,
   RegistrationSuccess,
 } from "@/components/emails/templates";
 
@@ -23,7 +24,7 @@ export const login = publicProcedure
     if (!user) throw BadRequest(userMsg.noAccount);
     const userService = new UserService(user);
     userService.validateStatus();
-    userService.validatePassword(password);
+    userService.verifyPassword(password);
     await TOKEN.create(user.id, SessionKey.UserSession);
     return sendResponse({ message: userMsg.loginSuccess });
   });
@@ -146,4 +147,36 @@ export const registerWithGoogle = publicProcedure
       reactEmail: RegistrationSuccess({ firstName: user.fullname }),
     });
     return sendResponse({ message: userMsg.registerSuccess });
+  });
+
+export const forgotPassword = publicProcedure
+  .input(authValidator.forgotPassword)
+  .mutation(async ({ input }) => {
+    const { step, email } = input;
+    const purpose = OtpPurpose.ForgotPassword;
+
+    const user = await UserQuery.getRecordOrNull({ by: "email", email });
+    if (!user) throw BadRequest(userMsg.noAccount);
+    const userService = new UserService(user);
+    userService.validateStatus();
+    userService.validatePassword();
+
+    switch (step) {
+      case 1:
+        const otp = await OtpService.sendOtp({ email, purpose });
+        await EmailService.sendMail({
+          email,
+          subject: "Forgot Password",
+          reactEmail: ForgotPassword({ email, otp }),
+        });
+        return sendResponse({ message: otpMsg.send });
+
+      case 2:
+        await OtpService.verifyOtp({ email, purpose, code: input.otp });
+        const hashPassword = await BCRYPT.hash(input.confirmPassword);
+        await UserQuery.update(user.id, { password: hashPassword });
+        return sendResponse({ message: userMsg.passwordForgottenSuccess });
+      default:
+        switchInvalidCase();
+    }
   });

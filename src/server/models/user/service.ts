@@ -12,9 +12,14 @@ export class UserService {
     if (status === UserStatus.Blocked) throw BadRequest(userMsg.accountBlocked);
   }
 
-  public async validatePassword(password: string) {
-    const { password: userPassword } = this.record;
-    if (!userPassword) throw BadRequest(userMsg.passwordNotUsed);
+  public validatePassword() {
+    const { password } = this.record;
+    if (!password) throw BadRequest(userMsg.passwordNotUsed);
+    return password;
+  }
+
+  public async verifyPassword(password: string) {
+    const userPassword = this.validatePassword();
     const isPasswordMatch = await BCRYPT.compare(password, userPassword);
     if (!isPasswordMatch) throw BadRequest(userMsg.invalidPassword);
   }

@@ -1,29 +1,37 @@
 import { type Metadata } from "next";
 
-export namespace APP_METADATA {
+type APP_METADATA_TYPE = {
+  login: Metadata;
+  register: Metadata;
+  forgotPassword: Metadata;
+  products: Metadata;
+  // singleProduct: () => Promise<Metadata>;
+};
+
+export const APP_METADATA: APP_METADATA_TYPE = {
   // auth
-  export const login: Metadata = {
+  login: {
     title: "Login",
     description:
       "Access your account securely with our authentication system. Log in with your credentials or social accounts.",
-  };
-  export const register: Metadata = {
+  },
+  register: {
     title: "Register",
     description:
       "Create your account in a few simple steps. Start using our secure and reliable authentication app today.",
-  };
-  export const forgotPassword: Metadata = {
+  },
+  forgotPassword: {
     title: "Forgot Password",
     description:
-      "Recover your account quickly and securely. Reset your password in just a few clicks.",
-  };
+      "Recover your account quickly and securely. Reset your password in just a few steps.",
+  },
   //
-  export const products: Metadata = { title: "Products" };
+  products: { title: "Products" },
   //! eg. (dynamic)
-  //   export const singleProduct = async (
+  //  singleProduct: async (
   //     { params, searchParams }: Props,
   //     parent: ResolvingMetadata,
-  //   ): Promise<Metadata> => {
+  //   ) => {
   //     // read route params
   //     const id = (await params).id;
 
@@ -39,5 +47,5 @@ export namespace APP_METADATA {
   //         images: ["/some-specific-page-image.jpg", ...previousImages],
   //       },
   //     };
-  //   };
-}
+  //   },
+};

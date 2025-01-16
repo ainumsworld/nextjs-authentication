@@ -61,3 +61,30 @@ export const registerWithGoogle = discriminatedUnion("step", [
 ]);
 
 export type RegisterWithGoogle = TypeOf<typeof registerWithGoogle>;
+
+// forgot password
+export const forgotPassword = discriminatedUnion("step", [
+  object({
+    step: literal(1),
+  }),
+
+  object({
+    step: literal(2),
+    otp: ZOD_SCHEMA.otp(),
+    newPassword: ZOD_SCHEMA.password("New password"),
+    confirmPassword: string().min(1, "Confirm password is required"),
+  }),
+])
+  .and(object({ email: ZOD_SCHEMA.email() }))
+  .refine(
+    (data) => {
+      if (data.step === 1) return true;
+      return data.step === 2 && data.newPassword === data.confirmPassword;
+    },
+    {
+      path: ["confirmPassword"],
+      message: "Passwords are not matching",
+    },
+  );
+
+export type ForgotPassword = TypeOf<typeof forgotPassword>;
