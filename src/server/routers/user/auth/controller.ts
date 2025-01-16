@@ -7,8 +7,13 @@ import { otpMsg, userMsg } from "@/server/messages";
 import { OtpService } from "@/server/models/otp";
 import { UserQuery, UserService } from "@/server/models/user";
 import { AuthService } from "@/server/services/auth";
+import { EmailService } from "@/server/services/email";
 import { publicProcedure } from "@/server/trpc";
 import { authValidator } from "@/server/validators/user";
+import {
+  EmailVerification,
+  RegistrationSuccess,
+} from "@/components/emails/templates";
 
 export const login = publicProcedure
   .input(authValidator.login)
@@ -55,7 +60,11 @@ export const register = publicProcedure
     switch (step) {
       case RegisterStep.EnterEmail:
         const otp = await OtpService.sendOtp({ email, purpose });
-        // todo: send email(otp)
+        await EmailService.sendMail({
+          email,
+          subject: "Email Verification",
+          reactEmail: EmailVerification({ email, otp }),
+        });
         return sendResponse({ message: otpMsg.send });
 
       case RegisterStep.VerifyOTP:
@@ -79,7 +88,11 @@ export const register = publicProcedure
           password: hashPassword,
         });
         await TOKEN.create(user.id, SessionKey.UserSession);
-        // todo: send email(register success)
+        await EmailService.sendMail({
+          email,
+          subject: "Registration Success",
+          reactEmail: RegistrationSuccess({ firstName: user.fullname }),
+        });
         return sendResponse({ message: userMsg.registerSuccess });
       default:
         switchInvalidCase();
@@ -127,6 +140,10 @@ export const registerWithGoogle = publicProcedure
       avatar,
     });
     await TOKEN.create(user.id, SessionKey.UserSession);
-    // todo: send email(register success)
+    await EmailService.sendMail({
+      email,
+      subject: "Registration Success",
+      reactEmail: RegistrationSuccess({ firstName: user.fullname }),
+    });
     return sendResponse({ message: userMsg.registerSuccess });
   });

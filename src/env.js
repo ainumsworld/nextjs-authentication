@@ -11,6 +11,8 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     JWT_SECRET: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    MAIL_USERNAME: z.string(),
+    MAIL_PASSWORD: z.string(),
   },
 
   /**
@@ -33,6 +35,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    MAIL_USERNAME: process.env.MAIL_USERNAME,
+    MAIL_PASSWORD: process.env.MAIL_PASSWORD,
     // client
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,

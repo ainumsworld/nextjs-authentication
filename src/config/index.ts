@@ -12,4 +12,4 @@ export const DEFAULT_LOGIN_PASSWORD = "demo123";
 export const REDIRECT_AFTER_LOGIN = APP_ROUTES.home;
 export const REDIRECT_AFTER_LOGOUT = APP_ROUTES.login;
 
-export const APP_URL = "http://localhost:3000";
+export const APP_URL = "https://nextjs-authentication-pro.vercel.app";

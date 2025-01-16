@@ -28,7 +28,7 @@ export class UserQuery {
         case "email":
           return eq(userTbl.email, args.email);
         case "username":
-          return eq(userTbl.email, args.username);
+          return eq(userTbl.username, args.username);
         default:
           switchInvalidCase();
       }
