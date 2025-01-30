@@ -2,13 +2,16 @@ type Props = {
   children: React.ReactNode;
 };
 
+const url = "/images/background/cover-19.webp";
+
 export const AuthLayout = ({ children }: Props) => {
   return (
-    <main className="min-h-screen flex relative">
-      <div className="overflow-auto fixed inset-0 bg-cover bg-no-repeat bg-center bg-[linear-gradient(to_bottom,rgba(20,26,33,0.82),rgba(20,26,33,0.82)),url(/images/background/bg-blur.webp)] ">
-        <div className="p-6 w-full min-h-full flex flex-col justify-center items-center">
-          {children}
-        </div>
+    <main
+      className="relative flex min-h-screen bg-cover bg-fixed bg-center bg-no-repeat before:absolute before:inset-0 before:backdrop-blur dark:before:bg-default-100/50"
+      style={{ backgroundImage: `url(${url})` }}
+    >
+      <div className="z-10 flex min-h-full w-full flex-col items-center justify-center p-6">
+        {children}
       </div>
     </main>
   );
